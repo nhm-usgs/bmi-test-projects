@@ -10,7 +10,7 @@ Or if you are developing the code inside of the prms6-bmi package -
 
 - run "pip install -e ."
 
-The pipestem project used in testing is found in /prms/pipestem. To test the bmi's copy the pipestem folder and and save as:
+The pipestem project used in testing is found in /prms/pipestem. To test the bmi's copy the /pipestem folder and and save as:
 1. pipestem_surface - control file: control_surface.simple1 
 2. pipestem_soil - control file: control_soil.simple1 
 3. pipestem_groundwater - control file: control_groundwater.simple1 
