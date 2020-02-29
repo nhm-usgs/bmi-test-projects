@@ -35,21 +35,42 @@ def plot_climate(c_xarray, hru_index, val, start, end, tax=None):
     line, = simclimate.sel(hru=hru_ids[hru_index])[val].plot(ax=tax)
     tax.set_title(val)
 
-def bmi_test_compare_plot(dbmi, dprms, hru_index, val, start, end, tax = None):
+def bmi_test_compare_plot(dbmi, dprms, n_index, val, start, end, tax = None):
     tax = tax or plt.gca()
-    bmi = dbmi.sel(nhru=hru_index, time=slice(start, end))[val]
-    prms = dprms.sel(nhru=hru_index, time=slice(start, end))[val]
-    line1, = bmi.plot(ax=tax)
-    line1, = prms.plot(ax=tax)
-    tax.set_title(val)
+    #test if val exists in both and get nhru or nsegment
+    dim_type = None
+    try:
+        dim_type = dbmi[val].dims[1]
+        if dim_type == 'nhru':
+            bmi = dbmi.sel(nhru=n_index, time=slice(start, end))[val]
+            prms = dprms.sel(nhru=n_index, time=slice(start, end))[val]
+        elif dim_type == 'nsegment':
+            bmi = dbmi.sel(nsegment=n_index, time=slice(start, end))[val]
+            prms = dprms.sel(nsegment=n_index, time=slice(start, end))[val]
+        line1, = bmi.plot(ax=tax)
+        line1, = prms.plot(ax=tax)
+        tax.set_title(f'{val} {n_index}')
 
-def bmi_test_compare_residual_plot(dbmi, dprms, hru_index, val, start, end, tax = None):
+    except Exception as err:
+        print('Error', {err})
+
+
+
+def bmi_test_compare_residual_plot(dbmi, dprms, n_index, val, start, end, tax = None):
     tax = tax or plt.gca()
-    bmi = dbmi.sel(nhru=hru_index, time=slice(start, end))[val]
-    prms = dprms.sel(nhru=hru_index, time=slice(start, end))[val]
-    res = prms-bmi
-    line1, = res.plot(ax=tax)
-    tax.set_title('Residual (prms-bmi)')
+    dim_type = dbmi[val].dims[1]
+    try:
+        if dim_type == 'nhru':
+            bmi = dbmi.sel(nhru=n_index, time=slice(start, end))[val]
+            prms = dprms.sel(nhru=n_index, time=slice(start, end))[val]
+        elif dim_type == 'nsegment':
+            bmi = dbmi.sel(nsegment=n_index, time=slice(start, end))[val]
+            prms = dprms.sel(nsegment=n_index, time=slice(start, end))[val]
+        res = prms-bmi
+        line1, = res.plot(ax=tax)
+        tax.set_title('Residual (prms-bmi)')
+    except Exception as err:
+        print('Error', {err})
 
 def get_feat_coord(feat, data_set, feat_id):
     lat_da = data_set[feat + '_lat']
