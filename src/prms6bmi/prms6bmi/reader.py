@@ -35,20 +35,28 @@ def plot_climate(c_xarray, hru_index, val, start, end, tax=None):
     line, = simclimate.sel(hru=hru_ids[hru_index])[val].plot(ax=tax)
     tax.set_title(val)
 
-def bmi_test_compare_plot(dbmi, dprms, n_index, val, start, end, tax = None):
+def bmi_prms6_value_plot(data, n_index, val, label, start, end, tax = None):
     tax = tax or plt.gca()
     #test if val exists in both and get nhru or nsegment
     dim_type = None
     try:
-        dim_type = dbmi[val].dims[1]
+        dim_type = data[val].dims[1]
+
         if dim_type == 'nhru':
-            bmi = dbmi.sel(nhru=n_index, time=slice(start, end))[val]
-            prms = dprms.sel(nhru=n_index, time=slice(start, end))[val]
+            data_val = data[val].sel(nhru=n_index, time=slice(start, end)).to_pandas()
+            # dprms_val = dprms[val].sel(nhru=n_index, time=slice(start, end))
+            data_val.plot.line(ax=tax, label=label)
+            tax.legend()
+            # line1, = dprms_val.plot.line(x='time', ax=tax, add_legend=True)
+
         elif dim_type == 'nsegment':
-            bmi = dbmi.sel(nsegment=n_index, time=slice(start, end))[val]
-            prms = dprms.sel(nsegment=n_index, time=slice(start, end))[val]
-        line1, = bmi.plot(ax=tax)
-        line1, = prms.plot(ax=tax)
+            data_val = data[val].sel(nsegment=n_index, time=slice(start, end)).to_pandas()
+            # dprms_val = dprms[val].sel(nsegment=n_index, time=slice(start, end)).to_pandas()
+
+            data_val.plot(ax=tax, label=label)
+            tax.legend()
+            # line1, = dprms_val.plot(label='PRMS6')
+
         tax.set_title(f'{val} {n_index}')
 
     except Exception as err:
@@ -56,18 +64,23 @@ def bmi_test_compare_plot(dbmi, dprms, n_index, val, start, end, tax = None):
 
 
 
-def bmi_test_compare_residual_plot(dbmi, dprms, n_index, val, start, end, tax = None):
+def bmi_prms6_residual_plot(dbmi, dprms, n_index, val, label, start, end, tax = None):
     tax = tax or plt.gca()
     dim_type = dbmi[val].dims[1]
     try:
         if dim_type == 'nhru':
-            bmi = dbmi.sel(nhru=n_index, time=slice(start, end))[val]
-            prms = dprms.sel(nhru=n_index, time=slice(start, end))[val]
+            data_val = dbmi[val] - dprms[val]
+            data = data_val.sel(nhru=n_index, time=slice(start, end)).to_pandas()
+            # bmi = dbmi[val]
+            # prms = dprms.sel(nhru=n_index, time=slice(start, end))[val]
         elif dim_type == 'nsegment':
-            bmi = dbmi.sel(nsegment=n_index, time=slice(start, end))[val]
-            prms = dprms.sel(nsegment=n_index, time=slice(start, end))[val]
-        res = prms-bmi
-        line1, = res.plot(ax=tax)
+            data_val = dbmi[val] - dprms[val]
+            data = data_val.sel(nsegment=n_index, time=slice(start, end)).to_pandas()
+            # bmi = dbmi.sel[val]
+            # prms = dprms.sel(nsegment=n_index, time=slice(start, end))[val]
+        # res = prms-bmi
+        data.plot(ax=tax, label=label)
+        tax.legend()
         tax.set_title('Residual (prms-bmi)')
     except Exception as err:
         print('Error', {err})
