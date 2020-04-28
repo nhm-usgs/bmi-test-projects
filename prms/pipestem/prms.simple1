@@ -63,7 +63,7 @@ sf_data
 model_output_file
 1
 4
-model_soil.out
+model_prms.out
 ####
 dprst_flag
 1
@@ -73,7 +73,7 @@ dprst_flag
 stats_output_file
 1
 4
-stats_soil.out
+stats_prms.out
 ####
 et_module
 1
@@ -133,7 +133,7 @@ prms_ic.in
 var_save_file
 1
 4
-prms_ic_soil.out
+prms_ic_prms.out
 ####
 csvON_OFF
 1
@@ -143,7 +143,7 @@ csvON_OFF
 csv_output_file
 1
 4
-stats_soil.csv
+stats_prms.csv
 ####
 cbh_check_flag
 1
@@ -236,7 +236,7 @@ seg_upstream_inflow
 outVar_base_filename
 1
 4
-./output/summary_soil_
+./output/summary_prms_
 ####
 dyn_covtype_flag
 1

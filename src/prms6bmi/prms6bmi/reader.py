@@ -80,6 +80,7 @@ def bmi_prms6_residual_plot(dbmi, dprms, n_index, val, label, start, end, tax = 
             # prms = dprms.sel(nsegment=n_index, time=slice(start, end))[val]
         # res = prms-bmi
         data.plot(ax=tax, label=label)
+        plt.gca().get_yaxis().get_major_formatter().set_useOffset(False)
         tax.legend()
         tax.set_title('Residual (prms-bmi)')
     except Exception as err:
