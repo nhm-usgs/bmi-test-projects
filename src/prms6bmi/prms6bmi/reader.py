@@ -8,6 +8,7 @@ import xarray as xr
 import glob
 import os
 import pandas as pd
+import geopandas as gpd
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -27,6 +28,7 @@ def get_DataSet_prms6(summary, myparam):
     return ds
 
 
+def bmi_prms6_value_splot()
 def plot_climate(c_xarray, hru_index, val, start, end, tax=None):
     tax = tax or plt.gca()
     hru_ids = c_xarray.hru.values
@@ -61,8 +63,6 @@ def bmi_prms6_value_plot(data, n_index, val, label, start, end, tax = None):
 
     except Exception as err:
         print('Error', {err})
-
-
 
 def bmi_prms6_residual_plot(dbmi, dprms, n_index, val, label, start, end, tax = None):
     tax = tax or plt.gca()
