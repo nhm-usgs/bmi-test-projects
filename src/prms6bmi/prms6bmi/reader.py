@@ -11,7 +11,7 @@ import pandas as pd
 import geopandas as gpd
 import numpy as np
 import matplotlib.pyplot as plt
-
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 def get_DataSet_prms6(summary, myparam):
     # merge spatial locations of hru and segments into summary file
@@ -28,7 +28,15 @@ def get_DataSet_prms6(summary, myparam):
     return ds
 
 
-def bmi_prms6_value_splot()
+def bmi_prms6_value_splot(gdf, mbmi, value, tvmin, tvmax, index, timesel, pax = None):
+    tax = pax or plt.gca()
+    gdf[value] = mbmi.get_value(value)
+    divider = make_axes_locatable(tax)
+    tcax = divider.append_axes(position='right', size='5%', pad=0.1)
+    gdf.plot(column=value, vmin=tvmin, vmax=tvmax, ax=tax, legend=True, cax=tcax)
+    tax.set_title(value)
+
+
 def plot_climate(c_xarray, hru_index, val, start, end, tax=None):
     tax = tax or plt.gca()
     hru_ids = c_xarray.hru.values

@@ -1,6 +1,7 @@
 from .reader import get_DataSet_prms6
 from .reader import plot_climate
 from .reader import bmi_prms6_value_plot
+from .reader import bmi_prms6_value_splot
 from .reader import bmi_prms6_residual_plot
 from .reader import get_feat_coord
 from .reader import get_hrus_for_box
