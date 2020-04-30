@@ -8,9 +8,10 @@ import xarray as xr
 import glob
 import os
 import pandas as pd
+import geopandas as gpd
 import numpy as np
 import matplotlib.pyplot as plt
-
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 def get_DataSet_prms6(summary, myparam):
     # merge spatial locations of hru and segments into summary file
@@ -25,6 +26,15 @@ def get_DataSet_prms6(summary, myparam):
     seg_lon = param.get("seg_lon")
     ds['seg_lon'] = seg_lon
     return ds
+
+
+def bmi_prms6_value_splot(gdf, mbmi, value, tvmin, tvmax, index, timesel, pax = None):
+    tax = pax or plt.gca()
+    gdf[value] = mbmi.get_value(value)
+    divider = make_axes_locatable(tax)
+    tcax = divider.append_axes(position='right', size='5%', pad=0.1)
+    gdf.plot(column=value, vmin=tvmin, vmax=tvmax, ax=tax, legend=True, cax=tcax)
+    tax.set_title(value)
 
 
 def plot_climate(c_xarray, hru_index, val, start, end, tax=None):
@@ -62,8 +72,6 @@ def bmi_prms6_value_plot(data, n_index, val, label, start, end, tax = None):
     except Exception as err:
         print('Error', {err})
 
-
-
 def bmi_prms6_residual_plot(dbmi, dprms, n_index, val, label, start, end, tax = None):
     tax = tax or plt.gca()
     dim_type = dbmi[val].dims[1]
@@ -80,6 +88,7 @@ def bmi_prms6_residual_plot(dbmi, dprms, n_index, val, label, start, end, tax = 
             # prms = dprms.sel(nsegment=n_index, time=slice(start, end))[val]
         # res = prms-bmi
         data.plot(ax=tax, label=label)
+        plt.gca().get_yaxis().get_major_formatter().set_useOffset(False)
         tax.legend()
         tax.set_title('Residual (prms-bmi)')
     except Exception as err:
